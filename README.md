@@ -114,40 +114,6 @@ This page allows you to:
 ## ADS1115 Integration
 The project uses two ADS1115 modules on the I2C bus, reading 4 single-ended channels from each. Scaling factors are applied after reading raw voltages, converting them into the desired physical quantities.
 
-## Project Structure
-.
-├── main/
-│   ├── CMakeLists.txt
-│   └── main.c
-├── components/
-│   ├── ads1115/
-│   │   ├── CMakeLists.txt
-│   │   ├── ads1115.c
-│   │   └── ads1115.h
-│   ├── web_server/
-│   │   ├── CMakeLists.txt
-│   │   ├── web_server.c
-│   │   ├── web_server.h
-│   │   └── web_files/
-│   │       ├── chart.js
-│   │       ├── index.html
-│   │       ├── list.html
-│   │       ├── logging.html
-│   │       ├── message.html
-│   │       ├── script.js
-│   │       └── style.css
-│   ├── settings/
-│   │   ├── CMakeLists.txt
-│   │   ├── settings.c
-│   │   └── settings.h
-│   └── ws2812/
-│       ├── CMakeLists.txt
-│       ├── ws2812.c
-│       └── ws2812.h
-├── sdkconfig.defaults
-├── CMakeLists.txt
-└── README.md
-
 
 ## License
 This project is licensed under the MIT License.
