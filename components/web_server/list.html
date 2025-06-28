@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popis datoteka - ESP32 SD Server</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>Sadržaj SD kartice</h1>
+        </header>
+
+        <main>
+            <div id="file-operation-message-container"></div>
+            <section class="upload-section">
+                <h2>Učitaj datoteku na SD karticu</h2>
+                <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+                    <label for="filetoupload" class="custom-file-upload button-link">
+                        Odaberi datoteku
+                    </label>
+                    <input type="file" id="filetoupload" name="filetoupload" style="display: none;" required>
+
+                    <span id="selectedFileName"
+                        style="margin-left: 10px; font-style: italic; color: var(--text-color-light);">Nije odabrana
+                        datoteka</span>
+
+                    <button type="submit" class="button-link" id="uploadButton">Učitaj</button>
+
+                    <div id="uploadProgressContainer"
+                        style="width: 100%; margin-top: 15px; display: none; text-align: center;">
+                        <progress id="progressBar" value="0" max="100" style="width: 80%; height: 20px;"></progress>
+                        <span id="progressText" style="margin-left: 10px; font-weight: bold;">0%</span>
+                    </div>
+                </form>
+            </section>
+            <hr class="section-divider">
+            <h2>Postojeće datoteke</h2>
+            <table id="file-table">
+                <thead>
+                    <tr>
+                        <th>Ime datoteke</th>
+                        <th>Preuzmi</th>
+                        <th>Obriši</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    %%FILE_LIST_ROWS%%
+                </tbody>
+            </table>
+            <div class="delete-all-container">
+                <button id="deleteAllBtn" class="button-link delete-all-button">Obriši sve</button>
+            </div>
+
+        </main>
+        <footer class="page-footer">
+            <a class="back-link" href="/">&larr; Natrag na početnu</a>
+        </footer>
+    </div>
+    <script src="/script.js"></script>
+</body>
+
+</html>

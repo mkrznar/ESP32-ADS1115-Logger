@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Logiranje ADC podataka</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header><h1>Logiranje podataka s ADS1115 (8 kanala)</h1></header>
+        <main>
+            <section class="log-control-area">
+                <div class="log-status-line">
+                    <div class="status" id="log-status">Status logiranja: ISKLJUČENO</div>
+                    <button id="log-toggle-btn" class="button-link">Počni logiranje</button>
+                </div>
+                <div class="log-file-display" id="current-log-file">Trenutna log datoteka: N/A</div>
+            </section>
+
+            <section>
+                <h2>Trenutne vrijednosti</h2>
+                <div class="adc-values" id="adc-values">Učitavanje vrijednosti...</div>
+            </section>
+
+            <section id="adcChartSection">
+                <h2>Graf očitanja ADC-a</h2>
+                <div id="adcChartContainer">
+                    <canvas id="adcChart"></canvas>
+                </div>
+            </section>
+        </main>
+        <footer> <a class="back-link" href="/">&larr; Natrag na početnu</a></footer>
+    </div>
+    <script>
+        let logActive = false;
+        const btn = document.getElementById('log-toggle-btn');
+        const adcDisplay = document.getElementById('adc-values');
+        const statusDisplay = document.getElementById('log-status');
+        const currentLogFileDisplay = document.getElementById('current-log-file');
+
+        let adcChartInstance;
+        const chartData = {
+            labels: [],
+            datasets: Array.from({length: 8}, (_, i) => ({
+                label: `CH${i}`,
+                data: [],
+                borderColor: `hsl(${i * 45}, 70%, 50%)`,
+                fill: false,
+                tension: 0.1
+            }))
+        };
+
+        function updateAdcValues() {
+            fetch('/adc')
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.kanali && Array.isArray(data.kanali)) {
+                        let row1Content = ''; // Sadržaj za prvi red (CH0-CH3)
+                        let row2Content = ''; // Sadržaj za drugi red (CH4-CH7)
+
+                        data.kanali.forEach((kanal, index) => {
+                            const vrijednost = kanal.vrijednost.toFixed(4);
+                            const jedinica = kanal.jedinica;
+                            const itemHtml = `<div class="adc-value-item"><strong>CH${index}:</strong> ${vrijednost} ${jedinica}</div>`;
+
+                            if (index < 4) { // Prva četiri kanala idu u prvi red
+                                row1Content += itemHtml;
+                            } else { // Ostali kanali idu u drugi red
+                                row2Content += itemHtml;
+                            }
+
+                            if (adcChartInstance) {
+                                const dataset = adcChartInstance.data.datasets[index];
+                                if (dataset) {
+                                    dataset.data.push(kanal.vrijednost);
+                                }
+                            }
+                        });
+
+                        // Slažemo konačni HTML sadržaj s dva reda
+                        adcDisplay.innerHTML = `
+                            <div class="adc-values-row">${row1Content}</div>
+                            <div class="adc-values-row">${row2Content}</div>
+                        `;
+
+                        if (adcChartInstance) {
+                            const maxDataPoints = 100;
+                            adcChartInstance.data.labels.push(new Date().toLocaleTimeString());
+                            if (adcChartInstance.data.labels.length > maxDataPoints) {
+                                adcChartInstance.data.labels.shift();
+                                adcChartInstance.data.datasets.forEach(dataset => {
+                                    dataset.data.shift();
+                                });
+                            }
+                            adcChartInstance.update();
+                        }
+                    } else {
+                        console.error('Greška: Neočekivana struktura podataka iz /adc (očekivan "kanali" niz):', data);
+                        adcDisplay.textContent = 'Greška pri dohvaćanju vrijednosti.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Greška pri dohvaćanju ADC vrijednosti:', error);
+                    adcDisplay.textContent = 'Greška pri dohvaćanju vrijednosti.';
+                });
+        }
+
+        function updateLogStatus() {
+            fetch('/log_status')
+                .then(r => r.json())
+                .then(data => {
+                    logActive = data.active;
+                    statusDisplay.textContent = `Status logiranja: ${logActive ? "UKLJUČENO" : "ISKLJUČENO"}`;
+                    btn.textContent = logActive ? "Zaustavi logiranje" : "Počni logiranje";
+
+                    if (logActive) {
+                        fetch('/current_log_file')
+                            .then(response => response.text())
+                            .then(filename => {
+                                currentLogFileDisplay.textContent = `Trenutna log datoteka: ${filename}`;
+                            })
+                            .catch(error => {
+                                console.error('Greška pri dohvaćanju imena log datoteke:', error);
+                                currentLogFileDisplay.textContent = 'Trenutna log datoteka: N/A (Greška)';
+                            });
+                    } else {
+                        currentLogFileDisplay.textContent = 'Trenutna log datoteka: N/A';
+                    }
+                })
+                .catch(_ => {
+                    // Ako ne uspije dohvatiti, ostavi postojeće stanje
+                });
+        }
+
+        function toggleLogging() {
+            fetch(`/log?active=${logActive ? 0 : 1}`)
+                .then(res => {
+                    if (res.ok) {
+                        logActive = !logActive;
+                        statusDisplay.textContent = `Status logiranja: ${logActive ? "UKLJUČENO" : "ISKLJUČENO"}`;
+                        btn.textContent = logActive ? "Zaustavi logiranje" : "Počni logiranje";
+                        updateLogStatus(); 
+                    } else {
+                        alert("Greška pri promjeni statusa logiranja.");
+                    }
+                })
+                .catch(_ => alert("Greška u komunikaciji."));
+        }
+
+        btn.addEventListener('click', toggleLogging);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('adcChart').getContext('2d');
+            adcChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 0 },
+                    scales: {
+                        x: {
+                            type: 'category',
+                            title: { display: true, text: 'Vrijeme' },
+                            ticks: { autoSkip: true, maxTicksLimit: 10 }
+                        },
+                        y: {
+                            title: { display: true, text: 'Vrijednost' }
+                        }
+                    },
+                    plugins: { legend: { display: true } }
+                }
+            });
+            console.log("Chart.js inicijaliziran.");
+
+            updateLogStatus();
+            updateAdcValues();
+
+            setInterval(updateAdcValues, 500);
+            setInterval(updateLogStatus, 500);
+        });
+    </script>
+</body>
+</html>

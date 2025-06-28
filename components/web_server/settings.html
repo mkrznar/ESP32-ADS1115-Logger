@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postavke ESP32</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .settings-container { margin-top: 2em; }
+        .setting-item { margin-bottom: 1.5em; }
+        .channel-config-table { width: 100%; border-collapse: collapse; margin-top: 1em; }
+        .channel-config-table th, .channel-config-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        .channel-config-table th { background-color: #f2f2f2; }
+        .channel-config-table input { width: 90%; padding: 5px; box-sizing: border-box; }
+        #saveBtn { margin-top: 2em; }
+        #statusMessage { margin-top: 1em; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>Postavke sustava</h1>
+        </header>
+
+        <main class="settings-container">
+            <div class="setting-item">
+                <label>
+                    <input type="checkbox" id="logOnBootCheckbox">
+                    Automatski pokreni logiranje pri pokretanju
+                </label>
+            </div>
+             
+            <h1>Konfiguracija kanala</h1>
+            <p>Podesite faktor skaliranja i mjerne jedinice za svaki od 8 kanala.</p>
+            <table class="channel-config-table" id="channelConfigTable">
+                <thead>
+                    <tr>
+                        <th>Kanal #</th>
+                        <th>Faktor skaliranja</th>
+                        <th>Mjerna jedinica</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+
+            <button id="saveBtn" class="button-link">Spremi sve postavke</button>
+            <p id="statusMessage" style="display:none;"></p>
+            <br><br>
+            <a class="back-link" href="/">&larr; Natrag na početnu</a>
+        </main>
+
+        <footer class="page-footer">
+            <p>&copy; 2025 Moj ESP32 Projekt</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const logOnBootCheckbox = document.getElementById('logOnBootCheckbox');
+            const tableBody = document.querySelector('#channelConfigTable tbody');
+            const saveBtn = document.getElementById('saveBtn');
+            const statusMessage = document.getElementById('statusMessage');
+
+            function showStatus(message, isError = false) {
+                statusMessage.textContent = message;
+                statusMessage.style.color = isError ? 'red' : 'green';
+                statusMessage.style.display = 'block';
+                setTimeout(() => { statusMessage.style.display = 'none'; }, 5000);
+            }
+
+            function populateForm() {
+                // 1. Dohvati opće postavke  
+                fetch('/settings')
+                    .then(response => response.json())
+                    .then(data => { logOnBootCheckbox.checked = data.log_on_boot === true; })
+                    .catch(error => console.error('Greška pri dohvaćanju općih postavki:', error));
+
+                // 2. Dohvati konfiguracije kanala
+                fetch('/api/channel-configs')
+                    .then(response => response.json())
+                    .then(configs => {
+                        tableBody.innerHTML = ''; // Očisti tablicu prije popunjavanja
+                        configs.forEach((config, index) => {
+                            // NOVO: Formatiraj scaling_factor na 4 decimalna mjesta za prikaz
+                            // parseFloat(config.factor) osigurava da je broj, a toFixed(4) formatira na 4 decimale.
+                            const formattedFactor = parseFloat(config.factor).toFixed(4);
+                            const row = `
+                                <tr>
+                                    <td>${index}</td>
+                                    <td><input type="number" step="any" id="factor-${index}" value="${formattedFactor}"></td>
+                                    <td><input type="text" maxlength="9" id="unit-${index}" value="${config.unit}"></td>
+                                </tr>
+                            `;
+                            tableBody.innerHTML += row;
+                        });
+                    })
+                    .catch(error => console.error('Greška pri dohvaćanju konfiguracija kanala:', error));
+            }
+            saveBtn.addEventListener('click', async () => {
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Spremam...';
+                
+                // 1. Priprema podataka za opće postavke
+                const generalSettingsPayload = { log_on_boot: logOnBootCheckbox.checked };
+                const generalPromise = fetch('/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(generalSettingsPayload)
+                });
+
+                // 2. Priprema podataka za konfiguracije kanala
+                const channelConfigsPayload = [];
+                for (let i = 0; i < 8; i++) {
+                    const factor = document.getElementById(`factor-${i}`).value;
+                    const unit = document.getElementById(`unit-${i}`).value;
+                    channelConfigsPayload.push({
+                        factor: parseFloat(factor) || 1.0,
+                        unit: unit || "V"
+                    });
+                }
+                const channelPromise = fetch('/api/channel-configs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(channelConfigsPayload)
+                });
+
+                // Čekaj da se oba zahtjeva izvrše
+                try {
+                    const responses = await Promise.all([generalPromise, channelPromise]);
+                    const allOk = responses.every(res => res.ok);
+
+                    if (allOk) {
+                        showStatus('Sve postavke su uspješno spremljene.');
+                    } else {
+                        showStatus('Došlo je do greške pri spremanju.', true);
+                    }
+                } catch (error) {
+                    showStatus('Mrežna greška: ' + error, true);
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Spremi sve postavke';
+                }
+            });
+
+            populateForm();
+        });
+    </script>
+</body>
+</html>

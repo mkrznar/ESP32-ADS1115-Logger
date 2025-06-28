@@ -1,0 +1,441 @@
+/* components/web_server/style.css */
+
+/* --- CSS Variables --- */
+/* Defines a set of custom properties (variables) to manage colors, fonts, spacing, and shadows globally. */
+/* This allows for easy theme changes and consistent styling across the application. */
+:root {
+    /* Primary brand colors */
+    --primary-color: #007bff;
+    --primary-color-darker: #0056b3;
+
+    /* Text colors */
+    --text-color: #333;
+    --text-color-light: #555;
+
+    /* Background colors */
+    --background-color: #f4f4f4; /* Main page background */
+    --container-bg: #fff;       /* Background for main content containers */
+    --border-color: #ddd;
+    --border-color-light: #eee;
+    --header-footer-bg: #f9f9f9; /* Background for page header/footer and upload section */
+
+    /* Status message colors (for success, error, info alerts) */
+    --success-bg: #d4edda;
+    --success-color: #155724;
+    --success-border: #c3e6cb;
+
+    --error-bg: #f8d7da;
+    --error-color: #721c24;
+    --error-border: #f5c6cb;
+    --delete-color: #dc3545; /* Specific color for delete actions */
+
+    --info-bg: #cce5ff;   /* Light blue background for info messages */
+    --info-color: #004085; /* Dark blue text color for info messages */
+    --info-border: #b8daff; /* Blue border for info messages */
+
+    /* Font definitions */
+    --font-family-sans: sans-serif;
+    --line-height-base: 1.6;
+
+    /* Sizing and shadow variables */
+    --border-radius-base: 8px; /* Standard border radius for elements */
+    --box-shadow-base: 0 2px 10px rgba(0, 0, 0, 0.1); /* Standard box shadow */
+}
+
+/* --- Basic Styles --- */
+/* Global styles applied to the body and main layout elements. */
+body {
+    font-family: var(--font-family-sans); /* Sets the primary font family */
+    line-height: var(--line-height-base); /* Sets basic line height for readability */
+    margin: 0;                             /* Removes default body margin */
+    padding: 20px;                         /* Adds padding around the content */
+    background-color: var(--background-color); /* Sets the main background color */
+    color: var(--text-color);              /* Sets the default text color */
+    display: flex;                         /* Enables Flexbox for layout */
+    flex-direction: column;                /* Arranges items in a column */
+    align-items: center;                   /* Centers items horizontally in the flex container */
+    min-height: 100vh;                     /* Ensures body takes at least full viewport height */
+    box-sizing: border-box;                /* Includes padding and border in element's total width and height */
+}
+
+.container {
+    background-color: var(--container-bg); /* Background color for main content containers */
+    padding: 25px 35px;                    /* Internal spacing within the container */
+    border-radius: var(--border-radius-base); /* Rounded corners */
+    box-shadow: var(--box-shadow-base);    /* Soft shadow for depth */
+    max-width: 1000px; /* Maximum width for the main content container */
+    width: 100%;                           /* Ensures container takes full width up to max-width */
+    box-sizing: border-box;                /* Includes padding and border in element's total width and height */
+    margin-bottom: auto;                   /* Pushes footer to the bottom if content is shorter than viewport height */
+}
+
+/* --- Page Header and Footer --- */
+/* Styles for the header and footer sections found on various web pages. */
+.page-header {
+    margin-bottom: 25px;       /* Space below the header */
+    padding-bottom: 15px;      /* Padding below header content */
+    border-bottom: 2px solid var(--primary-color); /* Bottom border as a visual separator */
+}
+
+.page-header h1 {
+    color: var(--primary-color-darker); /* Darker primary color for main headings */
+    text-align: center;                  /* Center aligns the heading text */
+    margin: 0;                           /* Removes default margin from H1; overall spacing controlled by .page-header */
+}
+
+.page-footer {
+    text-align: center;                    /* Center aligns footer content */
+    margin-top: 30px;                      /* Space above the footer */
+    padding-top: 15px;                     /* Padding above footer content */
+    border-top: 1px solid var(--border-color-light); /* Top border as a visual separator */
+    color: var(--text-color-light);        /* Lighter text color for footer */
+    font-size: 0.9em;                      /* Smaller font size for footer text */
+}
+
+h2 { /* Styles for subheadings like "Dostupne opcije:" (Available Options:) */
+    color: var(--primary-color-darker); /* Darker primary color for subheadings */
+    text-align: center;                  /* Center aligns subheadings */
+    margin-top: 25px;                    /* Space above subheading */
+    margin-bottom: 15px;                 /* Space below subheading */
+}
+
+/* --- Introduction Section (e.g., index.html) --- */
+/* Specific styles for introductory text commonly found on home pages. */
+.intro-section .intro-text {
+    text-align: center;         /* Center aligns introductory text */
+    margin-bottom: 30px;        /* Space below introductory text */
+    color: var(--text-color-light); /* Lighter text color */
+    font-size: 1.05em;          /* Slightly larger font size */
+}
+
+/* --- Main Options / Navigation (e.g., index.html) --- */
+/* Styles for the main navigation list on pages like the home page. */
+.main-options ul {
+    list-style: none; /* Removes bullet points from the list */
+    padding: 0;       /* Removes default list padding */
+    text-align: center; /* Center aligns list items */
+    margin: 20px 0;   /* Vertical margin for the list */
+}
+
+.main-options li {
+    margin: 10px 0; /* Vertical margin for individual list items */
+}
+
+/* --- Buttons / Button-like Links --- */
+/* General styles for elements that function as buttons or button-like links, ensuring consistent appearance. */
+.button-link {
+    display: inline-block; /* Allows setting width/height and horizontal alignment */
+    padding: 12px 25px;    /* Internal spacing for button text */
+    background-color: var(--primary-color); /* Background color using the primary theme color */
+    color: white;          /* White text color for contrast */
+    text-decoration: none; /* Removes underline from links */
+    border-radius: 5px;    /* Slightly rounded corners */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effects */
+    font-size: 1em;        /* Standard font size */
+    border: none;          /* Removes any default button border */
+    cursor: pointer;       /* Changes cursor to a pointer on hover, indicating interactivity */
+}
+
+.button-link:hover,
+.button-link:focus {
+    background-color: var(--primary-color-darker); /* Darker background on hover/focus */
+    text-decoration: none;                         /* Ensures no underline on hover */
+    transform: translateY(-2px);                   /* Subtle lift effect on hover */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);         /* Increased shadow on hover */
+}
+
+/* --- Back Links --- */
+/* Styles for navigation links that lead back to previous pages or the home page. */
+.back-link {
+    display: inline-block; /* Allows margins and padding to be applied */
+    margin-top: 20px;      /* Space above the link */
+    text-decoration: none; /* Removes underline */
+    color: var(--text-color-light); /* Lighter text color */
+    padding: 5px 10px;     /* Internal spacing */
+    border-radius: 4px;    /* Rounded corners */
+}
+
+.back-link:hover {
+    text-decoration: underline;    /* Underline on hover */
+    background-color: var(--border-color-light); /* Light background on hover */
+}
+
+/* --- Message Styles (for message.html and dynamic messages on list.html, settings.html) --- */
+/* Styles for displaying success, error, or informational messages to the user. */
+.message {
+    padding: 15px 20px;            /* Internal spacing */
+    margin-bottom: 20px;           /* Space below the message */
+    border-radius: 5px;            /* Rounded corners */
+    text-align: center;            /* Center aligns message text */
+    font-weight: bold;             /* Bold text */
+    border: 1px solid transparent; /* Transparent border, changes based on message type */
+}
+
+.message.success {
+    background-color: var(--success-bg);    /* Greenish background for success messages */
+    color: var(--success-color);          /* Dark green text */
+    border-color: var(--success-border);    /* Green border */
+}
+
+.message.error {
+    background-color: var(--error-bg);      /* Reddish background for error messages */
+    color: var(--error-color);            /* Dark red text */
+    border-color: var(--error-border);      /* Red border */
+}
+
+/* Style for informational messages */
+.message.info {
+    background-color: var(--info-bg);       /* Light blue background */
+    color: var(--info-color);             /* Dark blue text */
+    border-color: var(--info-border);       /* Blue border */
+}
+
+/* --- File List Table Styles (list.html) --- */
+/* Styles for displaying files in a table format, commonly used for file listings. */
+#file-table {
+    width: 100%;                  /* Table takes full width of its container */
+    border-collapse: collapse;    /* Collapses borders between table cells */
+    margin-top: 20px;             /* Space above the table */
+    margin-bottom: 20px;          /* Space below the table */
+    border: 1px solid var(--border-color); /* Border around the entire table */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Subtle shadow for the table */
+}
+
+#file-table th,
+#file-table td {
+    text-align: left;             /* Left aligns text in table headers and cells */
+    padding: 12px 15px;           /* Increased internal spacing within cells */
+    border-bottom: 1px solid var(--border-color); /* Bottom border for rows */
+}
+
+#file-table th {
+    background-color: #f2f2f2;    /* Light gray background for table headers */
+    color: var(--text-color-light); /* Lighter text color for headers */
+    font-weight: bold;            /* Bold font for headers */
+    text-transform: uppercase;    /* Optional: Uppercase text for headers */
+    font-size: 0.9em;             /* Slightly smaller font for headers */
+}
+
+#file-table tr:hover {
+    background-color: #f9f9f9;    /* Light background on row hover */
+}
+
+#file-table tr:last-child td {
+    border-bottom: none;          /* Removes bottom border for the last row in the table */
+}
+
+#file-table td a {
+    text-decoration: none;        /* Removes underline from links in table cells */
+    color: var(--primary-color);  /* Primary color for links */
+    margin-right: 10px;           /* Space between links */
+    padding: 4px 8px;             /* Internal spacing for link backgrounds */
+    border-radius: 3px;           /* Slightly rounded corners for link backgrounds */
+    transition: background-color 0.2s ease; /* Smooth transition for hover effects */
+}
+
+#file-table td a:hover {
+    text-decoration: none;        /* Ensures no underline on hover */
+    background-color: var(--primary-color-darker); /* Darker background on hover */
+    color: white;                 /* White text on hover */
+}
+
+#file-table td a.delete-link { /* Specific class for delete links in the table */
+    color: var(--delete-color); /* Red color for delete links */
+}
+
+#file-table td a.delete-link:hover {
+    background-color: var(--delete-color); /* Red background on hover */
+    color: white;                 /* White text on hover */
+}
+
+/* --- Upload Section Styles --- */
+/* Styles for the file upload form section. */
+.upload-section {
+    background-color: var(--header-footer-bg); /* Uses header/footer background color */
+    padding: 20px;                /* Internal spacing */
+    border-radius: var(--border-radius-base); /* Rounded corners */
+    margin-bottom: 30px;          /* Space below the section */
+    border: 1px solid var(--border-color-light); /* Light border */
+}
+
+/* --- ADC Values Display Styles (logging.html) --- */
+/* Styles for the section displaying real-time ADC readings. */
+.adc-values {
+    font-size: 1.2em; /* Slightly larger font size for readability */
+    margin-top: 1em;  /* Space above the display area */
+    display: flex;    /* Enables Flexbox for horizontal layout */
+    flex-wrap: wrap;  /* Allows items to wrap to the next line if space is limited */
+    gap: 15px;        /* Adds consistent space between each ADC value item */
+    justify-content: center; /* Centers the items horizontally within the container */
+}
+
+.adc-value-item {
+    border: 1px solid var(--border-color); /* Light gray border around each item */
+    padding: 8px 12px;    /* Internal spacing within each item */
+    border-radius: 5px;   /* Rounded corners for each item */
+    background-color: #f9f9f9; /* Light background color for each item */
+    min-width: 120px;     /* Ensures a minimum width for each item for consistent display */
+    text-align: center;   /* Centers text within each item */
+}
+
+.log-toggle {
+    margin-top: 2em; /* Space above the logging toggle button */
+}
+
+.status {
+    margin-top: 1em; /* Space above the logging status display */
+    font-weight: bold; /* Bold text for status messages */
+}
+
+/* --- Chart Container Styles (logging.html) --- */
+/* Styles specifically for the container holding the Chart.js graph. */
+#adcChartContainer {
+    width: 100%;        /* Takes full width of its parent */
+    min-height: 400px;  /* Minimum height for the chart to be visible */
+    max-width: 800px;   /* Maximum width for the chart container */
+    margin: 1em auto;   /* Centers the container horizontally and adds vertical margin */
+    background-color: var(--container-bg); /* White background */
+    padding: 1em;       /* Internal spacing */
+    border-radius: var(--border-radius-base); /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+/* --- Styles for Logging Control Area (logging.html) --- */
+/* This section positions the logging status, toggle button, and current log file name. */
+.log-control-area {
+    margin-top: 1.5em; /* Space above this section */
+    padding: 1em;
+    background-color: var(--header-footer-bg); /* Light background */
+    border-radius: var(--border-radius-base);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.log-status-line {
+    display: flex; /* Enables Flexbox for horizontal alignment */
+    justify-content: space-between; /* Puts space between items (status left, button right) */
+    align-items: center; /* Vertically centers items */
+    margin-bottom: 1em; /* Space below this line */
+}
+
+.log-file-display {
+    text-align: left; /* Aligns text to the left */
+    font-size: 0.95em;
+    color: var(--text-color-light);
+    border-top: 1px solid var(--border-color-light); /* Separator line */
+    padding-top: 0.8em;
+    margin-top: 0.8em;
+}
+/* Dodani stilovi */
+.adc-values-row {
+    display: flex; /* Omogući Flexbox za stavke unutar reda */
+    justify-content: center; /* Centriraj stavke unutar reda */
+    gap: 15px; /* Razmak između stavki unutar reda */
+    margin-bottom: 10px; /* Razmak između redova */
+    flex-wrap: wrap; /* Omogući prelamanje ako nema dovoljno mjesta */
+}
+
+/* --- Custom File Upload Button Styles --- */
+/* Styles to make the file input button look like other standard buttons. */
+.custom-file-upload {
+    cursor: pointer; /* Changes cursor to pointer on hover */
+    display: inline-block; /* Makes it behave like a block element, but fits content */
+    padding: 12px 25px; /* Matches padding of other buttons */
+    background-color: var(--primary-color); /* Primary color background */
+    color: white; /* White text */
+    text-decoration: none; /* No underline */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effects */
+    font-size: 1em; /* Standard font size */
+    border: none; /* No border */
+    text-align: center; /* Center text */
+    /* Add some margin to separate from other elements if needed */
+    margin-right: 10px; 
+}
+
+.custom-file-upload:hover, .custom-file-upload:focus {
+    background-color: var(--primary-color-darker); /* Darker on hover */
+    transform: translateY(-2px); /* Slight lift */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Shadow on hover */
+}
+
+/* --- Delete All Button Styles --- */
+/* Styles for the "Delete All" button, inheriting from button-link and adding specific color. */
+.delete-all-container {
+    text-align: right; /* Aligns the button to the right */
+    margin-top: 20px; /* Space above the button */
+}
+
+.delete-all-button {
+    background-color: var(--delete-color); /* Red color for delete action */
+}
+
+.delete-all-button:hover, .delete-all-button:focus {
+    background-color: #a02c3a; /* Darker red on hover */
+}
+
+/* Optional: Adjust layout for upload section if buttons are too close */
+.upload-section form {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers the form elements */
+    gap: 15px; /* Space between choose file and upload button */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    margin-top: 15px; /* Add some space if needed */
+}
+
+/* Optional: Adjust table header if a new column for "Delete All" is implied in your design */
+#file-table thead tr th:last-child {
+    width: 80px; /* Give some space for the button */
+}
+/* --- Custom File Upload Button Styles --- */
+/* Styles to make the file input button look like other standard buttons. */
+.custom-file-upload {
+    cursor: pointer; /* Changes cursor to pointer on hover */
+    display: inline-block; /* Makes it behave like a block element, but fits content */
+    padding: 12px 25px; /* Matches padding of other buttons */
+    background-color: var(--primary-color); /* Primary color background */
+    color: white; /* White text */
+    text-decoration: none; /* No underline */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effects */
+    font-size: 1em; /* Standard font size */
+    border: none; /* No border */
+    text-align: center; /* Center text */
+    margin-right: 10px; 
+}
+
+.custom-file-upload:hover, .custom-file-upload:focus {
+    background-color: var(--primary-color-darker); /* Darker on hover */
+    transform: translateY(-2px); /* Slight lift */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Shadow on hover */
+}
+
+/* --- Delete All Button Styles --- */
+/* Styles for the "Delete All" button, inheriting from button-link and adding specific color. */
+.delete-all-container {
+    text-align: right; /* Aligns the button to the right */
+    margin-top: 20px; /* Space above the button */
+}
+
+.delete-all-button {
+    background-color: var(--delete-color); /* Red color for delete action */
+}
+
+.delete-all-button:hover, .delete-all-button:focus {
+    background-color: #a02c3a; /* Darker red on hover */
+}
+
+/* Optional: Adjust layout for upload section if buttons are too close */
+.upload-section form {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers the form elements */
+    gap: 15px; /* Space between choose file and upload button */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    margin-top: 15px; /* Add some space if needed */
+}
+
+/* Optional: Adjust table header if a new column for "Delete All" is implied in your design */
+#file-table thead tr th:last-child {
+    width: 80px; /* Give some space for the button */
+}

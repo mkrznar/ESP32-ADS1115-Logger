@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ESP32 SD Web Server</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>Dobrodošli na ESP32 sustav za akviziciju podataka</h1>
+        </header>
+
+        <main>
+            <section class="intro-section">
+                <p class="intro-text">
+                  vaj uređaj predstavlja modularni sustav za akviziciju podataka i daljinsko upravljanje, temeljen na ESP32 platformi. 
+                  Web-poslužitelj omogućuje praćenje analognih veličina pomoću dvaju vanjskih ADC-ova (ADS1115), što ukupno 
+                  čini osam kanala. Podaci se prikazuju u stvarnom vremenu putem tablice i grafa s osvježavanjem svakih 0,5 sekundi, 
+                  dok se istovremeno logiraju na SD karticu u intervalima od 20 do 30 ms, ovisno o opterećenju procesora.
+                  Sustav omogućuje daljinski pristup, konfiguraciju postavki i upravljanje datotekama putem web-sučelja. Mjerene veličine mogu se skalirati pomoću decimalnih faktora ("float") i pridružiti im se odgovarajuće mjerne jedinice.
+            </section>
+
+            <nav class="main-options">
+                <h2>Dostupne opcije:</h2>
+                <ul>
+                    <li><a href="/logging.html" class="button-link">Monitoring i akvizicija podataka</a></li>
+                    <li><a href="/list" class="button-link">Pregled datoteka na SD kartici</a></li>
+                    <li><a href="/settings.html" class="button-link">Postavke</a></li>  
+                </ul>
+            </nav>
+        </main>
+
+        <footer class="page-footer">
+            <p>&copy; 2025 Matija Krznar</p>
+        </footer>
+    </div>
+</body>
+</html>

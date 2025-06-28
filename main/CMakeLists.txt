@@ -1,0 +1,13 @@
+idf_component_register(SRCS "main.c"  "ws2812.c"
+                       INCLUDE_DIRS "."
+                       REQUIRES "web_server" 
+                                "esp_wifi" 
+                                "esp_event" 
+                                "esp_netif" 
+                                "esp_timer" 
+                                "nvs_flash" 
+                                "log"
+                                "driver"
+                                "button"
+                                "ads1115"
+                       )
