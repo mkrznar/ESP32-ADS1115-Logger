@@ -2,6 +2,13 @@
 
 This project implements a system for logging analog data using an ESP32 microcontroller and ADS1115 ADC converters, featuring a web interface for configuration, monitoring, and file management on an SD card.
 
+This project was supported and carried out as part of the Strengthening Research and Innovation Excellence in Autonomous Aerial Systems – AeroSTREAM, a Horizon Europe Coordination and Support Action (CSA) project coordinated by the Laboratory for Robotics and Intelligent Control Systems (LARICS) at the University of Zagreb Faculty of Electrical Engineering and Computing (UNIZG FER).
+
+Call: HORIZON-WIDERA-2021-ACCESS-05
+Grant Agreement Number: 101071270
+Project Duration: July 1, 2022 – June 30, 2025
+https://aerostream.fer.hr/aerostream
+
 ## Table of Contents
 - [Features](#features)
 - [Hardware](#hardware)
