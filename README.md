@@ -1,4 +1,4 @@
-# ESP32 ADS1115 Data Logger with Web Interface
+# ESP32S3 Data Logger with SD card and Web Interface
 
 This project implements a system for logging analog data using an ESP32 microcontroller and ADS1115 ADC converters, featuring a web interface for configuration, monitoring, and file management on an SD card.
 
@@ -32,7 +32,7 @@ https://aerostream.fer.hr/aerostream
 * **Embedded Web Server:** Serves static web pages (HTML, CSS, JavaScript) directly from the firmware.
 * **Interactive Web Interface:**
     * View, download, and delete individual files from the SD card.
-    * **File Upload with Progress Bar:** Upload new files to the SD card with a visual percentage progress indicator.
+    * **File Upload:** Upload new files to the SD card.
     * **"Delete All" Functionality:** Option to delete all files from the SD card with a confirmation prompt.
     * **Logging Status Monitoring:** Displays current logging status (active/inactive) and the name of the active log file.
     * **Real-time ADC Monitoring:** Shows live ADC readings for all channels (numerical horizontal display and graphical representation).
@@ -41,10 +41,10 @@ https://aerostream.fer.hr/aerostream
 * **LED Indication:** WS2812 LED provides visual feedback on the logging status (e.g., green for active, red for inactive).
 
 ## Hardware
-* **ESP32 Development Board:** (e.g., ESP32-WROOM-32 or ESP32-S3)
+* **ESP32S3 Development Board:** 
 * **ADS1115 ADC Modules (x2):** 16-bit Analog-to-Digital Converters, connected via I2C.
 * **SD Card and SD Card Module:** Connected via SPI.
-* **WS2812B (NeoPixel) LED:** Connected to an RMT-capable GPIO pin.
+* **WS2812B (NeoPixel) LED:** On development board, connected to an RMT-capable GPIO pin.
 * **Physical Button:** Connected to a configured GPIO pin (standard boot button or other GPIO).
 
 ## Software
@@ -54,7 +54,7 @@ https://aerostream.fer.hr/aerostream
 * **FATFS:** Integrated for SD card file system operations.
 * **NVS (Non-Volatile Storage):** For persistent storage of settings.
 * **cJSON:** C library for parsing and generating JSON data.
-* **Chart.js:** JavaScript library for drawing interactive charts on the web interface.
+* **Chart.js:** JavaScript library for drawing interactive charts on the web interface. https://www.chartjs.org/
 
 ## Getting Started
 
@@ -65,11 +65,6 @@ https://aerostream.fer.hr/aerostream
     git clone <URL_OF_THIS_REPOSITORY>
     cd <REPOSITORY_NAME>
     ```
-3.  **Initialize Submodules (if used for components like ADS1115, cJSON):**
-    ```bash
-    git submodule update --init --recursive
-    ```
-    (Alternatively, manually add necessary components if not using submodules.)
 
 ### Compiling and Flashing
 1.  **Project Configuration:**
@@ -95,7 +90,7 @@ Provides general information about the system and navigation links to other part
 
 ### File Management (`/list`)
 This page allows you to:
-* **Upload Files:** Select a file from your device and upload it to the SD card. Features include selected file name display and a **progress bar with percentage** during upload. If a file with the same name exists, it will prompt for overwrite confirmation.
+* **Upload Files:** Select a file from your device and upload it to the SD card. Features include selected file name display. If a file with the same name exists, it will prompt for overwrite confirmation.
 * **List Files:** Displays a tabular list of all files present on the SD card, with options to download and individually delete each file.
 * **"Delete All" Button:** Initiates the deletion of all files from the SD card after a confirmation prompt.
 
@@ -109,11 +104,7 @@ This page displays:
 ### Settings (`/settings.html`)
 This page allows you to:
 * **Log on Boot:** Enable or disable automatic logging when the ESP32 starts up.
-* **Channel Configuration:** Adjust scaling factors and measurement units for each of the 8 ADC channels. These settings are permanently saved in NVS (Non-Volatile Storage) and applied to ADC readings. Decimal values for scaling factors will be displayed formatted correctly (e.g., `10.2000`).
-
-## ADS1115 Integration
-The project uses two ADS1115 modules on the I2C bus, reading 4 single-ended channels from each. Scaling factors are applied after reading raw voltages, converting them into the desired physical quantities.
-
+* **Channel Configuration:** Adjust scaling factors and measurement units for each of the 8 ADC channels. These settings are permanently saved in NVS (Non-Volatile Storage) and applied to ADC readings.
 
 ## License
 This project is licensed under the MIT License.
